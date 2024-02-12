@@ -4,6 +4,7 @@ import com.ignase.firstcrud.models.UserModel;
 import com.ignase.firstcrud.repositories.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -17,8 +18,16 @@ public class UserService {
         return (ArrayList<UserModel>) userRepository.findAll();
     }
 
-    public UserModel saveUser(UserModel user){
+    /*public UserModel saveUser(UserModel user){
         return userRepository.save(user);
+    }*/
+    public int save(UserModel userModel){
+        int res=0;
+        UserModel userM=userRepository.save(userModel);
+        if (!userM.equals(null)){
+            res=1;
+        }
+        return res;
     }
 
     public Optional<UserModel> getById(Long id){

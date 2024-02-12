@@ -5,27 +5,38 @@ import com.ignase.firstcrud.repositories.IUserRepository;
 import com.ignase.firstcrud.services.UserService;
 import jakarta.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
+import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-@RestController
-@RequestMapping(value ="/users")
+@Controller
+//@RequestMapping(value="/users")
 public class UserController {
     @Autowired
     private UserService userService;
     @Autowired
     private IUserRepository userRepository;
-    @GetMapping(value ="/getUsers")
-    public ArrayList<UserModel> getUsers(){
-        return this.userService.getUsers();
+
+    @GetMapping(value="/list")
+    public String getUsers(Model model){
+        List<UserModel> users = userService.getUsers();
+        model.addAttribute("users", users);
+        return "usersList";
     }
 
-    @PostMapping(value = "/saveUser")
-    public UserModel saveUser(@RequestBody UserModel user){
-        return this.userService.saveUser(user);
+    @GetMapping(value="/new")
+    public String addUser(Model model){
+        model.addAttribute("user", new UserModel());
+        return "form";
+    }
+    @PostMapping(value="/save")
+    public String save(@Valid @ModelAttribute  UserModel userModel, Model model){
+        userService.save(userModel);
+        return "redirect:/list";
     }
 
     @GetMapping(path = "/getWithId{id}")
